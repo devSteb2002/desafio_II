@@ -1,0 +1,118 @@
+#include "estacion.h"
+
+estacion::estacion(QSqlDatabase& db_) : db(db_) {}
+
+
+unsigned int estacion::crearEstacion(){ // crear una estacion de servicio
+
+    QSqlQuery query(db);
+    query.prepare("INSERT INTO tbl_estacion (nombre, region, latitud, longitud, id_red) VALUES (?, ?, ?, ?, ?)");
+    //query.bindValue(":id_estacion", 2);
+    query.bindValue(0, QString::fromStdString(getNombre()));
+    query.bindValue(1, QString::fromStdString(getRegion()));
+    query.bindValue(2, getLatitud());
+    query.bindValue(3, getLongitud());
+    query.bindValue(4, 1);
+
+    if (!query.exec()){
+        cerr << "Error al insertar en la bd" << query.lastError().text().toStdString() << endl;
+        return 0;
+    }
+
+    unsigned int idInsertado = query.lastInsertId().toInt(); //retornar el id creado
+    return idInsertado;
+}
+
+unsigned int* estacion::obtenerEstaciones(unsigned short &tamaño){ //obtener las estaciones de servicio de la red
+
+    QSqlQuery query(db);
+    unsigned short cantidad = 0;
+
+    query.prepare("SELECT COUNT(id_estacion) FROM tbl_estacion WHERE id_red = ?");
+    query.bindValue(0, 1);
+
+    if (!query.exec()){
+        cout << "Error al consultar datos" << endl;
+        return nullptr;
+    }
+
+    if (query.next()) cantidad = query.value(0).toInt();
+
+    unsigned int* ids = new unsigned int[cantidad];
+    unsigned int iterador = 0;
+
+    query.prepare("SELECT id_estacion, nombre FROM tbl_estacion WHERE id_red = ?");
+    query.bindValue(0, 1);
+
+    if (!query.exec()){
+        cout << "No se pudo consultar las estaciones." << endl;
+        return nullptr;
+    }
+
+    cout << "-----------------------------------------------" << endl;
+    cout << "|              Lista de Estaciones            |" << endl;
+    cout << "-----------------------------------------------" << endl;
+
+
+    while(query.next()){
+        unsigned const int idEstacion = query.value(0).toInt();
+        string nombre = query.value(1).toString().toStdString();
+        ids[iterador] = idEstacion;
+
+        cout << idEstacion << " " << nombre << endl;
+        iterador++;
+    }
+
+    tamaño = iterador;
+    return ids;
+
+}
+
+
+//setter
+void estacion::setId(int id){
+    this->id = id;
+}
+
+void estacion::setNombre(string nombre){
+    this->nombre = nombre;
+}
+
+void estacion::setRegion(string region){
+    this->region = region;
+}
+
+void estacion::setLatitud(float latitud){
+    this->latitud = latitud;
+}
+
+void estacion::setLongitud(float longitud){
+    this->longitud = longitud;
+}
+
+//getter
+unsigned int  estacion::getId() const{
+    return this->id;
+}
+
+string estacion::getNombre() const{
+    return this->nombre;
+}
+
+string estacion::getRegion() const{
+    return this->region;
+}
+
+float estacion::getLatitud() const{
+    return this->latitud;
+}
+
+float estacion::getLongitud() const{
+    return this->longitud;
+}
+
+
+
+estacion::~estacion(){
+
+}

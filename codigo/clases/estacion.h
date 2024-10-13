@@ -1,31 +1,33 @@
 #ifndef ESTACION_H
 #define ESTACION_H
 
-#include <iostream>
 #include "conexion/conexion.h"
 
 using namespace std;
 
 class estacion
 {
+
+    friend ostream& operator<<(ostream &os, const estacion & e){ // sobrecarga de operador << para imprimir el id de la clase
+        os << "Estacion id: " << e.id;
+    }
+
 public:
     estacion(QSqlDatabase& db_);
 
-    unsigned int crearEstacion();
-    unsigned int* obtenerEstaciones(unsigned short &tamaño);
-
+    unsigned int crearEstacion(unsigned int idRegion);
+    unsigned int* obtenerEstaciones(unsigned int &tamaño);
+    void eliminarEstacion();
 
     //setter
     void setId(int id);
     void setNombre(string nombre);
-    void setRegion(string region);
     void setLatitud(float latitud);
     void setLongitud(float longitud);
 
     //getter
     unsigned int getId() const;
     string getNombre() const;
-    string getRegion() const;
     float getLatitud() const;
     float getLongitud() const;
 
@@ -34,7 +36,6 @@ public:
 private:
     unsigned int id;
     string nombre;
-    string region;
     float latitud;
     float longitud;
     QSqlDatabase& db;

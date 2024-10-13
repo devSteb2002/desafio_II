@@ -10,8 +10,10 @@ CONFIG += c++17 cmdline
 SOURCES += \
         clases/estacion.cpp \
         clases/red.cpp \
+        clases/region.cpp \
         clases/surtidor.cpp \
         clases/tanque.cpp \
+        clases/venta.cpp \
         conexion/conexion.cpp \
         controladores/gestionRed.cpp \
         main.cpp \
@@ -25,8 +27,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     clases/estacion.h \
     clases/red.h \
+    clases/region.h \
     clases/surtidor.h \
     clases/tanque.h \
+    clases/venta.h \
     conexion/conexion.h \
     controladores/gestionRed.h \
     validaciones/entradas.h

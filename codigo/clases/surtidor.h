@@ -1,9 +1,10 @@
 #ifndef SURTIDOR_H
 #define SURTIDOR_H
 
-#include <iostream>
 #include "conexion/conexion.h"
 #include "estacion.h"
+#include "venta.h"
+
 
 using namespace std;
 
@@ -13,6 +14,7 @@ public:
     Surtidor(QSqlDatabase& db_, estacion &estacion_);
 
     int obtenerCantidadActivos();
+    bool eliminarSurtidor(Venta &venta);
 
     void setId(unsigned int id);
     void setModelo(string modelo);

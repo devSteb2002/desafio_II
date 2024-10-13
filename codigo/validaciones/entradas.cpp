@@ -55,13 +55,5 @@ bool validarVarchar(unsigned short longitud, string text){ // sanetizar y valida
     return true;
 }
 
-bool validarNumeroEnArreglo(unsigned int *&array,  unsigned int tamañaArray ,unsigned int numero){
 
-    for (unsigned int i = 0; i < tamañaArray; i++){
-        if (array[i] == numero) return true;
-    }
 
-    cout << "Codigo ingresado no existe, vuelva a intentar." << endl;
-
-    return false;
-}

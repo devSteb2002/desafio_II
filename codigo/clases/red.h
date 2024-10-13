@@ -1,7 +1,6 @@
 #ifndef RED_H
 #define RED_H
 
-#include <iostream>
 #include "conexion/conexion.h"
 
 using namespace std;

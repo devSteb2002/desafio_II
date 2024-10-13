@@ -14,7 +14,7 @@ public:
     Tanque(class estacion* estacion_, QSqlDatabase* db_);
 
     void crearTanque();
-    short eliminarTanque();
+    bool eliminarTanque();
 
     void setIdTanque(unsigned int idTanque);
     void setCapacidadTanque(float capacidadTanque);

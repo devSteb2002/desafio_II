@@ -1,9 +1,10 @@
 #ifndef SURTIDOR_H
 #define SURTIDOR_H
 
-#include <iostream>
 #include "conexion/conexion.h"
 #include "estacion.h"
+#include "venta.h"
+
 
 using namespace std;
 
@@ -14,6 +15,7 @@ public:
 
     int obtenerCantidadActivos();
     unsigned int agregarSurtidor(unsigned int id);
+    bool eliminarSurtidor(Venta &venta);
 
     void setId(unsigned int id);
     void setModelo(string modelo);

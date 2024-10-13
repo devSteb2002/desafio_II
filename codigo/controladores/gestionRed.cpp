@@ -4,6 +4,8 @@
 // #include "clases/red.h"
 #include "clases/estacion.h"
 #include "clases/tanque.h"
+#include "clases/region.h"
+#include "clases/venta.h"
 
 void agregarEstacionDeServicio(QSqlDatabase& db);
 void eliminarEstacionDeServicio(QSqlDatabase& db);
@@ -17,6 +19,7 @@ void gestionRed(){ //inicio del controlador
 
     menu(db);
 }
+
 
 void menu(QSqlDatabase& db){
 
@@ -57,9 +60,19 @@ void agregarEstacionDeServicio(QSqlDatabase& db){ //agregar estaciones de servic
 
     cout << "Ingrese lo datos a continuacion." << endl;
 
-    string nombre, region;
+    string nombre;
     float longitud, latitud;
+    unsigned short region;
     bool prin = true, validoNombre = false, validaRegion = false, validaLatitud = false;
+
+
+    unsigned short *ids = nullptr;
+    string *nombres = nullptr;
+    unsigned short tamaño;
+
+    Region reg(db);
+    reg.obtenerRegiones(ids, nombres, tamaño);
+
 
     while (true){
 
@@ -74,14 +87,18 @@ void agregarEstacionDeServicio(QSqlDatabase& db){ //agregar estaciones de servic
             validoNombre = true;
         }
         else if (!validaRegion){ //validar region de la estacion
-            cout << "Ingrese la region de la estacion: ";
-            getline(cin,  region);
 
-            if (!validarVarchar(10, region)) continue;
+            cout << "Seleccione una region." << endl;
+            for (unsigned short i = 0; i < tamaño; i++) cout << ids[i] <<  " " << nombres[i] << endl;
+            cout << "Digite el codigo: ";
+            cin >> region;
+
+            if (!validarCin()) continue;
+            if (!validarNumeroEnArreglo(ids, tamaño, region)) continue;
 
             validaRegion = true;
         }
-        else if (!validaLatitud) {
+        else if (!validaLatitud) { // validar latitud
             cout << "Ingrese la latitud: ";
             cin >> latitud;
 
@@ -89,24 +106,27 @@ void agregarEstacionDeServicio(QSqlDatabase& db){ //agregar estaciones de servic
 
             validaLatitud = true;
 
-        }else{
+        }else{ //validar longitud
             cout << "Ingrese la longitud: ";
             cin >> longitud;
 
             if (!validarCin()) continue;
 
             break;
+
         }
     }
+
+    delete[] ids;
+    delete[] nombres;
 
     estacion est(db);
 
     est.setNombre(nombre);
-    est.setRegion(region);
     est.setLatitud(latitud);
     est.setLongitud(longitud);
 
-    unsigned int idCreado = est.crearEstacion();
+    unsigned int idCreado = est.crearEstacion(region);
     est.setId(idCreado);
 
     try {
@@ -133,10 +153,10 @@ void agregarEstacionDeServicio(QSqlDatabase& db){ //agregar estaciones de servic
 
 void eliminarEstacionDeServicio(QSqlDatabase& db){ // eliminar una estacion de servicio
 
-    unsigned short tamaño;
+    unsigned int tamaño;
     unsigned int id;
 
-    estacion est_(db);
+    estacion est_(db); //instancia estacion
     unsigned int *ids = est_.obtenerEstaciones(tamaño); // tamño por referencia se obtiene un array con los id
 
     while (true){ //pedir codigo
@@ -151,27 +171,39 @@ void eliminarEstacionDeServicio(QSqlDatabase& db){ // eliminar una estacion de s
     }
 
     est_.setId(id);
-    Surtidor surt(db, est_);
+    Surtidor surt(db, est_); //instancia surtidor
     int cantidad = surt.obtenerCantidadActivos(); // obtener surtidores activos
 
     if (cantidad == -1){
         cout << "Error al traer los surtidores." << endl;
         est_.~estacion();
         surt.~Surtidor();
+        delete[] ids;
         menu(db);
         return;
     }
 
 
-    if (cantidad > 0){ // cuando no se puede eliminar
+    if (cantidad > 0){ // cuando no se puede eliminar por tener surtidores activos
         cout << "No se puede eliminar esta estacion, porque tiene surtidores activos." << endl;
         est_.~estacion();
         surt.~Surtidor();
+        delete[] ids;
         menu(db);
         return;
 
-    }else{ // se puede eliminar
-        cout << "Si se puede eliminar" << endl;
+    }else{ // se puede eliminar la estacion
+        //nota: progresivamente se tiene que eliminar surtidor y tanque y despues estacion
+
+        // Tanque tanq(&est_, &db);
+        // Venta vent(surt, db);
+        // if (tanq.eliminarTanque()){
+        //      surt.eliminarSurtidor(vent);
+        // }
+
+        // est_.eliminarEstacion();
+
+        // tanq.~Tanque();
     }
 
 

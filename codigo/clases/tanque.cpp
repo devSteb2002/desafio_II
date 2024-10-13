@@ -1,4 +1,5 @@
 #include "tanque.h"
+#include "estacion.h"
 
 Tanque::Tanque(): estacion(nullptr), db(nullptr){}
 
@@ -32,8 +33,15 @@ void Tanque::crearTanque(){
     }
 }
 
-short Tanque::eliminarTanque(){
+bool Tanque::eliminarTanque(){
 
+    QSqlQuery query(*db);
+    query.prepare("DELETE * FROM tbl_tanque WHERE id_estacion = ?");
+    query.bindValue(0, estacion->getId());
+
+    if (query.exec()) return true;
+
+    return false;
 }
 
 

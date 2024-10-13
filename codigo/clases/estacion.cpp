@@ -3,16 +3,16 @@
 estacion::estacion(QSqlDatabase& db_) : db(db_) {}
 
 
-unsigned int estacion::crearEstacion(){ // crear una estacion de servicio
+unsigned int estacion::crearEstacion(unsigned int idRegion){ // crear una estacion de servicio
 
     QSqlQuery query(db);
-    query.prepare("INSERT INTO tbl_estacion (nombre, region, latitud, longitud, id_red) VALUES (?, ?, ?, ?, ?)");
+    query.prepare("INSERT INTO tbl_estacion (nombre, latitud, longitud, id_red, id_region) VALUES (?, ?, ?, ?, ?)");
     //query.bindValue(":id_estacion", 2);
     query.bindValue(0, QString::fromStdString(getNombre()));
-    query.bindValue(1, QString::fromStdString(getRegion()));
-    query.bindValue(2, getLatitud());
-    query.bindValue(3, getLongitud());
-    query.bindValue(4, 1);
+    query.bindValue(1, getLatitud());
+    query.bindValue(2, getLongitud());
+    query.bindValue(3, 1);
+    query.bindValue(4, idRegion);
 
     if (!query.exec()){
         cerr << "Error al insertar en la bd" << query.lastError().text().toStdString() << endl;
@@ -23,7 +23,7 @@ unsigned int estacion::crearEstacion(){ // crear una estacion de servicio
     return idInsertado;
 }
 
-unsigned int* estacion::obtenerEstaciones(unsigned short &tamaño){ //obtener las estaciones de servicio de la red
+unsigned int* estacion::obtenerEstaciones(unsigned int &tamaño){ //obtener las estaciones de servicio de la red
 
     QSqlQuery query(db);
     unsigned short cantidad = 0;
@@ -65,6 +65,12 @@ unsigned int* estacion::obtenerEstaciones(unsigned short &tamaño){ //obtener la
 
     tamaño = iterador;
     return ids;
+}
+
+
+void estacion::eliminarEstacion(){ //eliminar una estacion (eliminar primero surtidores y tanques)
+
+
 
 }
 
@@ -76,10 +82,6 @@ void estacion::setId(int id){
 
 void estacion::setNombre(string nombre){
     this->nombre = nombre;
-}
-
-void estacion::setRegion(string region){
-    this->region = region;
 }
 
 void estacion::setLatitud(float latitud){
@@ -99,9 +101,6 @@ string estacion::getNombre() const{
     return this->nombre;
 }
 
-string estacion::getRegion() const{
-    return this->region;
-}
 
 float estacion::getLatitud() const{
     return this->latitud;
@@ -110,7 +109,6 @@ float estacion::getLatitud() const{
 float estacion::getLongitud() const{
     return this->longitud;
 }
-
 
 
 estacion::~estacion(){

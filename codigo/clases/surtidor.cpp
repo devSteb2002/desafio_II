@@ -6,7 +6,7 @@ Surtidor::Surtidor(QSqlDatabase& db_, class estacion& estacion_): db(db_), estac
 int Surtidor::obtenerCantidadActivos(){
 
     QSqlQuery query(db);
-    query.prepare("SELECT COUNT(s.id_surtidor) FROM tbl_surtidor AS s INNER JOIN tbl_tanque AS t ON s.id_tanque = t.id_tanque WHERE t.id_estacion = ? and s.activo = ?");
+    query.prepare("SELECT COUNT(id_surtidor) FROM tbl_surtidor WHERE id_estacion = ? and activo = ?");
     query.bindValue(0, estacion.getId());
     query.bindValue(1, 1);
 
@@ -53,6 +53,18 @@ unsigned int Surtidor::agregarSurtidor(unsigned int id) {
 
     unsigned int idSurtidor = query.lastInsertId().toInt();
     return idSurtidor;
+}
+
+
+bool Surtidor::eliminarSurtidor(Venta &venta){ //eliminar surtidor
+    QSqlQuery query(db);
+    query.prepare("DELETE FROM tbl_surtidor WHERE id_estacion = ?");
+    query.bindValue(0, estacion.getId());
+
+    if (query.exec()) return true;
+
+    return false;
+
 }
 
 //setter

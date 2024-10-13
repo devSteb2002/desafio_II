@@ -463,4 +463,7 @@ void historicoTransacciones(QSqlDatabase &db) {
 
     surtidor.historicoTransacciones();
     menuEstaciones(db);
+
+    delete[] estacionesDisponibles;
+    delete[] surtidoresDisponibles;
 }

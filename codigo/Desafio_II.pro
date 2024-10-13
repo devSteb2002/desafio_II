@@ -13,6 +13,7 @@ SOURCES += \
         clases/surtidor.cpp \
         clases/tanque.cpp \
         conexion/conexion.cpp \
+        controladores/gestionEstaciones.cpp \
         controladores/gestionRed.cpp \
         main.cpp \
         validaciones/entradas.cpp
@@ -28,5 +29,6 @@ HEADERS += \
     clases/surtidor.h \
     clases/tanque.h \
     conexion/conexion.h \
+    controladores/gestionEstaciones.h \
     controladores/gestionRed.h \
     validaciones/entradas.h

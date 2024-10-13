@@ -55,7 +55,7 @@ void menu(QSqlDatabase& db){
 
 void agregarEstacionDeServicio(QSqlDatabase& db){ //agregar estaciones de servicio
 
-    cout << "Ingrese lo datos a continucacion." << endl;
+    cout << "Ingrese lo datos a continuacion." << endl;
 
     string nombre, region;
     float longitud, latitud;

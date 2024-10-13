@@ -1,6 +1,7 @@
 #include "conexion/conexion.h"
 #include "validaciones/entradas.h"
 #include "controladores/gestionRed.h"
+#include "controladores/gestionEstaciones.h"
 
 void inicio();
 
@@ -53,7 +54,7 @@ void inicio(){
     cout << "------" << endl;
     cout << "Opciones disponibles. " << endl;
     cout << "1. Gestion de red." << endl;
-    cout << "2. Gestion de estaciones de servicion." << endl;
+    cout << "2. Gestion de estaciones de servicio." << endl;
 
 
     short opcion;
@@ -73,6 +74,7 @@ void inicio(){
         gestionRed();
         break;
     case 2:
+        gestionEstaciones();
         break;
     default:
         break;

@@ -45,28 +45,57 @@ void menuEstaciones(QSqlDatabase &db) {
 }
 
 void agregarSurtidor(QSqlDatabase &db) {
-    string modelo;
-    unsigned int idEstacion;
-    bool activo = true, validarModelo = false;
+
+    estacion estacionActual(db);
+    unsigned int tamEstaciones;
+
+    unsigned int* estacionesDisponibles = estacionActual.obtenerEstaciones(tamEstaciones);
+
+    if (tamEstaciones == 0) {
+        cout << "No hay estaciones disponibles." << endl;
+        return;
+    }
+
+    // Seleccionar estación por ID
+    unsigned int idEstacionSeleccionada;
 
     while (true) {
-        if (!validarModelo) {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Ingrese el modelo del surtidor: ";
-            getline(cin, modelo);
+        cout << "Ingrese el ID de la estacion a la que desea agregar un surtidor: ";
+        cin >> idEstacionSeleccionada;
 
-            if (!validarVarchar(100, modelo)) continue;
-            validarModelo = true;
-        } else  {
-            cout << "Ingrese la estacion a la que pertenece (id de la estacion): ";
-            cin >> idEstacion;
+        if (!validarCin()) continue;
+        break;
+    }
 
-            if (!validarCin()) continue;
+    // Verificar que el ID ingresado esté en la lista de estaciones
+    bool estacionEncontrada = false;
+    for (unsigned int i = 0; i < tamEstaciones; i++) {
+        if (estacionesDisponibles[i] == idEstacionSeleccionada) {
+            estacionEncontrada = true;
+            estacionActual.setId(idEstacionSeleccionada);
             break;
         }
     }
 
-    estacion estacionActual(db);
+    if (!estacionEncontrada) {
+        cout << "ID de estacion no encontrado." << endl;
+        delete[] estacionesDisponibles;
+        return;
+    }
+
+    string modelo;
+    bool activo = true;
+
+    while (true) {
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Ingrese el modelo del surtidor: ";
+        getline(cin, modelo);
+
+        if (!validarVarchar(100, modelo)) continue;
+        break;
+    }
+
+
     Surtidor surtidor(db, estacionActual);
 
     surtidor.setModelo(modelo);
@@ -74,7 +103,7 @@ void agregarSurtidor(QSqlDatabase &db) {
 
     try {
 
-        unsigned int idSurtidor = surtidor.agregarSurtidor(idEstacion);
+        unsigned int idSurtidor = surtidor.agregarSurtidor();
         surtidor.setId(idSurtidor);
 
         if (surtidor.getId() != 0) {
@@ -88,5 +117,7 @@ void agregarSurtidor(QSqlDatabase &db) {
     } catch (const exception& e) {
         cout << "Error: " << e.what() << endl;
     }
+
+    delete[] estacionesDisponibles;
 
 }

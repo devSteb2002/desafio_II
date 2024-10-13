@@ -53,6 +53,7 @@ void agregarSurtidor(QSqlDatabase &db) {
 
     if (tamEstaciones == 0) {
         cout << "No hay estaciones disponibles." << endl;
+        menuEstaciones(db);
         return;
     }
 
@@ -80,6 +81,7 @@ void agregarSurtidor(QSqlDatabase &db) {
     if (!estacionEncontrada) {
         cout << "ID de estacion no encontrado." << endl;
         delete[] estacionesDisponibles;
+        menuEstaciones(db);
         return;
     }
 

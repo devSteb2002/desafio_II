@@ -1,14 +1,16 @@
 #include "controladores/gestionRed.h"
 #include "clases/surtidor.h"
 #include "validaciones/entradas.h"
-// #include "clases/red.h"
+#include "clases/red.h"
 #include "clases/estacion.h"
 #include "clases/tanque.h"
 #include "clases/region.h"
 #include "clases/venta.h"
+#include "clases/categoria.h"
 
 void agregarEstacionDeServicio(QSqlDatabase& db);
 void eliminarEstacionDeServicio(QSqlDatabase& db);
+void calcularMontoDeVentasPorES(QSqlDatabase& db);
 void menu(QSqlDatabase& db);
 
 void gestionRed(){ //inicio del controlador
@@ -18,6 +20,8 @@ void gestionRed(){ //inicio del controlador
     QSqlDatabase& db = bdObject.getBd(); // obtener el objeto db
 
     menu(db);
+
+    bdObject.~conexion();
 }
 
 
@@ -51,9 +55,15 @@ void menu(QSqlDatabase& db){
     case 2:
         eliminarEstacionDeServicio(db);
         break;
+    case 3:
+        calcularMontoDeVentasPorES(db);
+        break;
     default:
         break;
     }
+
+
+
 }
 
 void agregarEstacionDeServicio(QSqlDatabase& db){ //agregar estaciones de servicio
@@ -134,6 +144,7 @@ void agregarEstacionDeServicio(QSqlDatabase& db){ //agregar estaciones de servic
 
             Tanque tanq_(&est, &db);
             tanq_.crearTanque();
+            //tanq_.~Tanque();
 
             cout << "Estacion creada con exito." << endl;
 
@@ -159,52 +170,102 @@ void eliminarEstacionDeServicio(QSqlDatabase& db){ // eliminar una estacion de s
     estacion est_(db); //instancia estacion
     unsigned int *ids = est_.obtenerEstaciones(tamaño); // tamño por referencia se obtiene un array con los id
 
-    while (true){ //pedir codigo
-        cout << "Ingrese un codigo de estacion: ";
-        cin >> id;
 
-        if (!validarCin()) continue;
-        if (!validarPositivo(id)) continue;
-        if (!validarNumeroEnArreglo(ids, tamaño ,id)) continue; // validar que el codigo exista
+    if (tamaño > 0){
+        while (true){ //pedir codigo
+            cout << "Ingrese un codigo de estacion: ";
+            cin >> id;
 
-        break;
+            if (!validarCin()) continue;
+            if (!validarPositivo(id)) continue;
+            if (!validarNumeroEnArreglo(ids, tamaño ,id)) continue; // validar que el codigo exista
+
+            break;
+        }
+    }else{
+        if (ids != nullptr) delete[] ids;
+        cout << "No existen estaciones disponibles." << endl;
+        menu(db);
+        return;
     }
+
+
+
+    delete[] ids;
 
     est_.setId(id);
     Surtidor surt(db, est_); //instancia surtidor
-    int cantidad = surt.obtenerCantidadActivos(); // obtener surtidores activos
+    Venta vent(surt, db);
 
-    if (cantidad == -1){
-        cout << "Error al traer los surtidores." << endl;
-        est_.~estacion();
-        surt.~Surtidor();
-        delete[] ids;
-        menu(db);
-        return;
+    bool eliminar = false;
+
+    if (surt.verificarExistencia()){ // si existen surtidores
+        // se eliminan sus ventas y los propios suritodes
+        int cantidad = surt.obtenerCantidadActivos(); // obtener surtidores activos
+
+        if (cantidad == -1){
+            cout << "Error al traer los surtidores." << endl;
+        }else if (cantidad > 0){ // cuando no se puede eliminar por tener surtidores activos
+            cout << "No se puede eliminar esta estacion, porque tiene surtidores activos." << endl;
+        }else{ // eliminar surtidores y ventas
+
+            bool surtidoresEliminados = surt.eliminarSurtidores(vent);
+
+            if (!surtidoresEliminados){ // se eliminaron las ventas y los surtidores correctamente
+                cout << "Error al eliminar los surtidores." << endl;
+            }else {
+                eliminar = true;
+            }
+        }
+    }else eliminar = true;
+
+
+    if (eliminar){
+        //eliminar tanque y estacion
+        Tanque tanq(&est_, &db);
+
+        if (tanq.eliminarTanque()){ // eliminar tanque
+            if (est_.eliminarEstacion()){
+                cout << "La estacion " << est_.getId() << " fue eliminada con exito" << endl;
+            }else{
+                cout << "La estacion " << est_.getId() << " no se pudo eliminar " << endl;
+            }
+        }
     }
 
+    menu(db);
+}
 
-    if (cantidad > 0){ // cuando no se puede eliminar por tener surtidores activos
-        cout << "No se puede eliminar esta estacion, porque tiene surtidores activos." << endl;
-        est_.~estacion();
-        surt.~Surtidor();
-        delete[] ids;
+
+void calcularMontoDeVentasPorES(QSqlDatabase& db){ // calcular el monto de ventas
+
+    unsigned int tamaño;
+
+    red red(db);
+
+    estacion est(db);
+    Surtidor surt(db, est);
+    Venta vent(surt, db);
+
+    unsigned int idRed = red.getIdRed();
+
+    unsigned int *idsEstaciones = est.obtenerEstaciones(tamaño, false);
+
+    if (tamaño == 0){ // no hay estaciones
+        cout << "No hay estaciones para calcular la venta." << endl;
+
+        if (idsEstaciones != nullptr) delete[] idsEstaciones;
+
         menu(db);
         return;
 
-    }else{ // se puede eliminar la estacion
-        //nota: progresivamente se tiene que eliminar surtidor y tanque y despues estacion
+    }else{
 
-        // Tanque tanq(&est_, &db);
-        // Venta vent(surt, db);
-        // if (tanq.eliminarTanque()){
-        //      surt.eliminarSurtidor(vent);
-        // }
+        Categoria categoria(db);
+        vent.calcularVentasPorES(idRed, categoria);
 
-        // est_.eliminarEstacion();
+        menu(db);
+        return;
 
-        // tanq.~Tanque();
     }
-
-
 }

@@ -16,8 +16,9 @@ public:
     estacion(QSqlDatabase& db_);
 
     unsigned int crearEstacion(unsigned int idRegion);
-    unsigned int* obtenerEstaciones(unsigned int &tamaño);
-    void eliminarEstacion();
+    unsigned int* obtenerEstaciones(unsigned int &tamaño, bool mostrarMensaje = true);
+    unsigned int obtenerTotalEs(unsigned int idRed);
+    bool eliminarEstacion();
 
     //setter
     void setId(int id);

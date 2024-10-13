@@ -15,7 +15,8 @@ public:
 
     int obtenerCantidadActivos();
     unsigned int agregarSurtidor();
-    bool eliminarSurtidor(Venta &venta);
+    bool eliminarSurtidores(Venta &venta);
+    bool verificarExistencia();
 
     void setId(unsigned int id);
     void setModelo(string modelo);

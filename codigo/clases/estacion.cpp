@@ -19,14 +19,14 @@ unsigned int estacion::crearEstacion(unsigned int idRegion){ // crear una estaci
         return 0;
     }
 
-    unsigned int idInsertado = query.lastInsertId().toInt(); //retornar el id creado
+    unsigned int idInsertado = query.lastInsertId().toUInt(); //retornar el id creado
     return idInsertado;
 }
 
-unsigned int* estacion::obtenerEstaciones(unsigned int &tamaño){ //obtener las estaciones de servicio de la red
+unsigned int* estacion::obtenerEstaciones(unsigned int &tamaño, bool mostrarMensaje){ //obtener las estaciones de servicio de la red
 
     QSqlQuery query(db);
-    unsigned short cantidad = 0;
+    unsigned int cantidad = 0;
 
     query.prepare("SELECT COUNT(id_estacion) FROM tbl_estacion WHERE id_red = ?");
     query.bindValue(0, 1);
@@ -36,41 +36,67 @@ unsigned int* estacion::obtenerEstaciones(unsigned int &tamaño){ //obtener las 
         return nullptr;
     }
 
-    if (query.next()) cantidad = query.value(0).toInt();
+    if (query.next()) cantidad = query.value(0).toUInt();
 
-    unsigned int* ids = new unsigned int[cantidad];
-    unsigned int iterador = 0;
+    if (cantidad > 0){
 
-    query.prepare("SELECT id_estacion, nombre FROM tbl_estacion WHERE id_red = ?");
-    query.bindValue(0, 1);
+        unsigned int* ids = new unsigned int[cantidad];
+        unsigned int iterador = 0;
 
-    if (!query.exec()){
-        cout << "No se pudo consultar las estaciones." << endl;
-        return nullptr;
+        query.prepare("SELECT id_estacion, nombre FROM tbl_estacion WHERE id_red = ?");
+        query.bindValue(0, 1);
+
+        if (!query.exec()){
+            cout << "No se pudo consultar las estaciones." << endl;
+            delete[] ids;
+            return nullptr;
+        }
+
+        if (mostrarMensaje){
+            cout << "-----------------------------------------------" << endl;
+            cout << "|              Lista de Estaciones            |" << endl;
+            cout << "-----------------------------------------------" << endl;
+        }
+
+
+        while(query.next()){
+            unsigned const int idEstacion = query.value(0).toUInt();
+            string nombre = query.value(1).toString().toStdString();
+            ids[iterador] = idEstacion;
+
+            if (mostrarMensaje) cout << idEstacion << " " << nombre << endl;
+            iterador++;
+        }
+
+        tamaño = iterador;
+        return ids;
     }
 
-    cout << "-----------------------------------------------" << endl;
-    cout << "|              Lista de Estaciones            |" << endl;
-    cout << "-----------------------------------------------" << endl;
-
-
-    while(query.next()){
-        unsigned const int idEstacion = query.value(0).toInt();
-        string nombre = query.value(1).toString().toStdString();
-        ids[iterador] = idEstacion;
-
-        cout << idEstacion << " " << nombre << endl;
-        iterador++;
-    }
-
-    tamaño = iterador;
-    return ids;
+    return nullptr;
 }
 
 
-void estacion::eliminarEstacion(){ //eliminar una estacion (eliminar primero surtidores y tanques)
+bool estacion::eliminarEstacion(){ //eliminar una estacion (eliminar primero surtidores y tanques)
 
+    QSqlQuery query(db);
 
+    query.prepare("DELETE FROM tbl_estacion WHERE id_estacion = ?");
+    query.bindValue(0, getId());
+
+    if (query.exec()) return true;
+    else return false;
+}
+
+unsigned int estacion::obtenerTotalEs(unsigned int idRed){ //obtener la cantidad de estaciones
+
+    QSqlQuery query(db);
+    query.prepare("SELECT COUNT(id_estacion) FROM tbl_estacion WHERE id_red = ?");
+    query.bindValue(0, idRed);
+
+    if (query.exec() && query.next()) return query.value(0).toUInt();
+    else cout << query.lastError().text().toStdString() << endl;
+
+    return 0;
 
 }
 

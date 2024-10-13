@@ -1,10 +1,8 @@
 #include "red.h"
 
-red::red(): idRed(0), pais("Colombia") {
-    conexion conn; // instancia conexion
-    QSqlDatabase& db = conn.getBd(); // conexion a la base de datos
+red::red(QSqlDatabase& bd_): idRed(0),  pais("Colombia"), bd(bd_) {
 
-    QSqlQuery query(db);
+    QSqlQuery query(bd);
 
     query.prepare("SELECT id_red FROM tbl_red LIMIT 1");
     query.exec();
@@ -15,13 +13,10 @@ red::red(): idRed(0), pais("Colombia") {
     }
 
     if (query.next()){
-        unsigned int idRed = query.value(0).toInt();
+        unsigned int idRed = query.value(0).toUInt();
         setIdRed(idRed);
     }
-
-    conn.~conexion(); // cerrar conexion
 }
-
 
 //setter
 void red::setIdRed(unsigned int id){

@@ -12,7 +12,7 @@ Tanque::Tanque(class estacion* estacion_, QSqlDatabase* db_) : estacion(estacion
 
     if (query.exec()){
         if (query.next()){
-            unsigned int id = query.value(0).toInt();
+            unsigned int id = query.value(0).toUInt();
             float capacidadTanque = query.value(1).toFloat();
 
             setIdTanque(id);
@@ -36,10 +36,11 @@ void Tanque::crearTanque(){
 bool Tanque::eliminarTanque(){
 
     QSqlQuery query(*db);
-    query.prepare("DELETE * FROM tbl_tanque WHERE id_estacion = ?");
+    query.prepare("DELETE FROM tbl_tanque WHERE id_estacion = ?");
     query.bindValue(0, estacion->getId());
 
     if (query.exec()) return true;
+    else cout << query.lastError().text().toStdString() << endl;
 
     return false;
 }
@@ -65,6 +66,15 @@ float Tanque::getCapacidadTanque() const{
 
 
 Tanque::~Tanque(){
-    delete estacion;
-    delete db;
+
+    // if (estacion){
+    //     delete estacion;
+    //     estacion = nullptr;
+    // }
+
+    // if (db){
+    //     delete db;
+    //     db = nullptr;
+    // }
+
 }

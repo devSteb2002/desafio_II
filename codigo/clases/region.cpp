@@ -13,7 +13,7 @@ void Region::obtenerRegiones(unsigned short *&ids, string *&nombres, unsigned sh
 
     if (query.exec()){
         if (query.next()){
-            tamañoArreglo = query.value(0).toInt();
+            tamañoArreglo = query.value(0).toUInt();
         }
     }else{
         cout << "Errror al ejecutar la consultas " << query.lastError().text().toStdString();
@@ -34,7 +34,7 @@ void Region::obtenerRegiones(unsigned short *&ids, string *&nombres, unsigned sh
     if (query.exec()){
         unsigned short i = 0;
         while (query.next()){
-            unsigned int id = query.value(0).toInt();
+            unsigned int id = query.value(0).toUInt();
             string nombre = query.value(1).toString().toStdString();
             nombres_[i] = nombre;
             ids_[i] = id;

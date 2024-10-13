@@ -2,20 +2,22 @@
 #define VENTA_H
 
 #include "conexion/conexion.h"
+#include "categoria.h"
 
 class Venta
 {
 public:
     Venta(class Surtidor &surtidor_ , QSqlDatabase& db_);
 
-    bool eliminarVenta();
+    bool eliminarVentas(unsigned int *&ids, unsigned int tamaño);
+    void calcularVentasPorES(unsigned int idRed, Categoria& categoria);
 
-    void setIdVenta();
-    void setFecha();
-    void setHora();
-    void setMetodoPago();
-    void setCantidadCombustible();
-    void setCantidadDinero();
+    void setIdVenta(unsigned int idVenta);
+    void setFecha(string fecha);
+    void setHora(string hora);
+    void setMetodoPago(string metodoPago);
+    void setCantidadCombustible(float cantidadCombustible);
+    void setCantidadDinero(float cantidadDinero);
 
 
     unsigned int getIdVenta() const;

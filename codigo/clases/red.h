@@ -8,7 +8,7 @@ using namespace std;
 class red
 {
     public:
-        red();
+        red(QSqlDatabase& bd_);
         unsigned int getIdRed() const;
         string getPais() const;
         void setIdRed(unsigned int id);
@@ -17,6 +17,7 @@ class red
     private:
         unsigned int idRed;
         string pais;
+        QSqlDatabase& bd;
 
 };
 

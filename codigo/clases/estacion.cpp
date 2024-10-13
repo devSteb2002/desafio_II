@@ -58,7 +58,6 @@ unsigned int* estacion::obtenerEstaciones(unsigned int &tamaño, bool mostrarMen
             cout << "-----------------------------------------------" << endl;
         }
 
-
         while(query.next()){
             unsigned const int idEstacion = query.value(0).toUInt();
             string nombre = query.value(1).toString().toStdString();

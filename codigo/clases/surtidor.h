@@ -16,16 +16,14 @@ public:
     int obtenerCantidadActivos();
     unsigned int* obtenerSurtidores(unsigned int& tamaño);
     unsigned int agregarSurtidor();
-<<<<<<< HEAD
     bool eliminarSurtidores(Venta &venta);
     bool verificarExistencia();
-=======
-    bool eliminarSurtidor(Venta &venta);
+  
     bool eliminarSurtidor();
     void desactivarSurtidor();
     void activarSurtidor();
     void historicoTransacciones();
->>>>>>> 7b894cb6019a836fe4cb6500789c7e5656749395
+
 
     void setId(unsigned int id);
     void setModelo(string modelo);

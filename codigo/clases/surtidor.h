@@ -14,8 +14,13 @@ public:
     Surtidor(QSqlDatabase& db_, estacion &estacion_);
 
     int obtenerCantidadActivos();
+    unsigned int* obtenerSurtidores(unsigned int& tamaño);
     unsigned int agregarSurtidor();
     bool eliminarSurtidor(Venta &venta);
+    bool eliminarSurtidor();
+    void desactivarSurtidor();
+    void activarSurtidor();
+    void historicoTransacciones();
 
     void setId(unsigned int id);
     void setModelo(string modelo);

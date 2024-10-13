@@ -46,6 +46,7 @@ unsigned int* estacion::obtenerEstaciones(unsigned int &tamaño){ //obtener las 
 
     if (!query.exec()){
         cout << "No se pudo consultar las estaciones." << endl;
+        delete[] ids;
         return nullptr;
     }
 
@@ -55,7 +56,7 @@ unsigned int* estacion::obtenerEstaciones(unsigned int &tamaño){ //obtener las 
 
 
     while(query.next()){
-        unsigned const int idEstacion = query.value(0).toInt();
+        unsigned int const idEstacion = query.value(0).toInt();
         string nombre = query.value(1).toString().toStdString();
         ids[iterador] = idEstacion;
 

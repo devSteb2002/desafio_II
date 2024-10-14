@@ -1,3 +1,3 @@
 #include "cliente.h"
 
-Cliente::cliente() {}
+Cliente::Cliente(QSqlDatabase& db_) : db(db_) {}

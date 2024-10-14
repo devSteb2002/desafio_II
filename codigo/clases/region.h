@@ -12,11 +12,9 @@ public:
 
     void setIdRegion(unsigned short idRegion);
     void setNombre(string nombre);
-    void setValorCombustible(float valorCombustible);
 
     unsigned short getIdRegion();
     string getNombre();
-    float getValorCombustible();
 
     ~Region();
 
@@ -24,7 +22,6 @@ public:
 private:
     unsigned short idRegion;
     string nombre;
-    float valorCombustible;
     QSqlDatabase& db;
 };
 

@@ -18,6 +18,7 @@ bool validarNumeroEnArreglo(T *&array, T tamañaArray ,T numero){
     }
 
     cout << "Codigo ingresado no existe, vuelva a intentar." << endl;
+    cout << "----------------" << endl;
 
     return false;
 }

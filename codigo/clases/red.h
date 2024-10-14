@@ -9,6 +9,7 @@ class red
 {
     public:
         red(QSqlDatabase& bd_);
+
         unsigned int getIdRed() const;
         string getPais() const;
         void setIdRed(unsigned int id);

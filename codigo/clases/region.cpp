@@ -54,24 +54,18 @@ void Region::obtenerRegiones(unsigned short *&ids, string *&nombres, unsigned sh
 
 
 void Region::setIdRegion(unsigned short idRegion){
-
+    this->idRegion = idRegion;
 }
 
 void Region::setNombre(string nombre){
-
-}
-void Region::setValorCombustible(float valorCombustible){
-
+    this->nombre = nombre;
 }
 
 unsigned short Region::getIdRegion(){
-
+    return this->idRegion;
 }
 string Region::getNombre(){
-
-}
-float Region::getValorCombustible(){
-
+    return this->nombre;
 }
 
 Region::~Region(){

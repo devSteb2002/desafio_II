@@ -9,6 +9,7 @@ CONFIG += c++17 cmdline
 
 SOURCES += \
         clases/categoria.cpp \
+        clases/combustible.cpp \
         clases/estacion.cpp \
         clases/red.cpp \
         clases/region.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
         conexion/conexion.cpp \
         controladores/gestionEstaciones.cpp \
         controladores/gestionRed.cpp \
+        controladores/simulacionVenta.cpp \
         main.cpp \
         validaciones/entradas.cpp
 
@@ -28,6 +30,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     clases/categoria.h \
+    clases/combustible.h \
     clases/estacion.h \
     clases/red.h \
     clases/region.h \
@@ -37,4 +40,5 @@ HEADERS += \
     conexion/conexion.h \
     controladores/gestionEstaciones.h \
     controladores/gestionRed.h \
+    controladores/simulacionVenta.h \
     validaciones/entradas.h

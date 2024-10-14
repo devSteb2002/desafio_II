@@ -1,4 +1,5 @@
 #include "venta.h"
+#include <iomanip>
 
 Venta::Venta(class Surtidor &surtidor_ , QSqlDatabase& db_): surtidor(surtidor_), db(db_){
 
@@ -66,12 +67,17 @@ void Venta::calcularVentasPorES(unsigned int idRed, Categoria& categoria){ // Ca
 
                 nEstacion = nombreEstacion;
 
-                if (idEstacion == idAnterior) nEstacion = "";
+                if (idEstacion == idAnterior){
+                    nEstacion = "";
+                    cout << left << "" << nEstacion;
+                }
                 else {
                     cout << endl;
+                    cout << left <<  setw(15)  << nEstacion << " | ";
                 }
 
-                cout << nEstacion << "  ->  | "  << nombreCategoria <<  ":  "  << monto << " | ";
+                cout << setw(5) << nombreCategoria <<  ":  " ;
+                cout << setw(5) <<  monto << " | ";
 
                 idAnterior = idEstacion;
                 existe = true;

@@ -7,10 +7,12 @@
 #include "clases/region.h"
 #include "clases/venta.h"
 #include "clases/categoria.h"
+#include "clases/combustible.h"
 
 void agregarEstacionDeServicio(QSqlDatabase& db);
 void eliminarEstacionDeServicio(QSqlDatabase& db);
 void calcularMontoDeVentasPorES(QSqlDatabase& db);
+void fijarPreciosCombustibles(QSqlDatabase& db);
 void menu(QSqlDatabase& db);
 
 void gestionRed(){ //inicio del controlador
@@ -27,9 +29,9 @@ void gestionRed(){ //inicio del controlador
 
 void menu(QSqlDatabase& db){
 
-    cout << "----------------------" << endl;
-    cout << "| Opciones de la red |" << endl;
-    cout << "----------------------" << endl;
+    cout << "---------------------------------------------------------" << endl;
+    cout << "|                 OPCIONES DE LA RED                    |" << endl;
+    cout << "---------------------------------------------------------" << endl;
     cout << "1. Agregar estaciones de servicio." << endl;
     cout << "2. Eliminar una estacion de servicio." << endl;
     cout << "3. Calcular el monto total de ventas en cada E/S del pais." << endl;
@@ -43,7 +45,7 @@ void menu(QSqlDatabase& db){
 
         if (!validarCin()) continue;
         if (!validarPositivo(opcion)) continue;
-        if (!validarRango(1, 4, opcion)) continue;
+        if (!validarRango(1, 5, opcion)) continue;
 
         break;
     }
@@ -57,6 +59,9 @@ void menu(QSqlDatabase& db){
         break;
     case 3:
         calcularMontoDeVentasPorES(db);
+        break;
+    case 4:
+        fijarPreciosCombustibles(db);
         break;
     default:
         break;
@@ -268,4 +273,63 @@ void calcularMontoDeVentasPorES(QSqlDatabase& db){ // calcular el monto de venta
         return;
 
     }
+}
+
+void fijarPreciosCombustibles(QSqlDatabase& db){ // fijar precios de combustible segun categoria y segun region
+
+    cout << "-----------------------------------------------" << endl;
+    cout << "|   FIJAR PRECIOS DE COMBUSTIBLE POR REGION    |" << endl;
+    cout << "-----------------------------------------------" << endl;
+
+    string *nombreRegiones = nullptr;
+    string *nombresCategorias = nullptr;
+    unsigned short *idsRegiones = nullptr;
+    unsigned short *idsCategorias = nullptr;
+    unsigned short tamañoRegion;
+    unsigned short tamañoCategoria;
+
+    float precioLitro;
+
+    Region region(db);
+    Categoria categoria(db);
+    Combustible combustible(db);
+
+    region.obtenerRegiones(idsRegiones, nombreRegiones, tamañoRegion);
+    categoria.obtenerCategorias(nombresCategorias, idsCategorias, tamañoCategoria);
+
+    for (unsigned int i = 0; i < tamañoRegion; i++){ // iniciar con las regiones
+        cout << "Region: " << nombreRegiones[i] << endl;
+        cout << "----------" << endl;
+
+        for (unsigned int j = 0; j < tamañoCategoria; j++){
+            cout << "Tipo de combustible: " << nombresCategorias[j] << endl;
+
+            while (true){ // validar el ingreso el datos
+                cout << "Ingrese el precio por litro: ";
+                cin >> precioLitro;
+
+                if (!validarCin()) continue;
+                if (precioLitro < 0.0){
+                    cout << "El precio debe ser positivo, vuelva a intentar." << endl;
+                    continue;
+                }
+
+                break;
+            }
+
+            combustible.setValorLitro(precioLitro);
+            combustible.guardarCombustible(idsRegiones[i], idsCategorias[j]);
+        }
+    }
+
+    cout << "Precios fijados correctamente." << endl;
+
+    if (idsCategorias != nullptr) delete[] idsCategorias;
+    if (idsRegiones != nullptr) delete[] idsRegiones;
+    if (nombreRegiones != nullptr) delete[] nombreRegiones;
+    if (nombresCategorias != nullptr) delete[] nombresCategorias;
+
+    menu(db);
+    return;
+
 }

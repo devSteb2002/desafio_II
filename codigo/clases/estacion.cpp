@@ -63,12 +63,14 @@ unsigned int* estacion::obtenerEstaciones(unsigned int &tamaño, bool mostrarMen
             string nombre = query.value(1).toString().toStdString();
             ids[iterador] = idEstacion;
 
-            if (mostrarMensaje) cout << idEstacion << " " << nombre << endl;
+            if (mostrarMensaje) cout << idEstacion << ". " << nombre << endl;
             iterador++;
         }
 
         tamaño = iterador;
         return ids;
+    }else{
+        cout << "Error al buscar la cantidad de estaciones." << endl;
     }
 
     return nullptr;

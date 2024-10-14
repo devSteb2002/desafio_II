@@ -2,6 +2,7 @@
 #include "validaciones/entradas.h"
 #include "controladores/gestionRed.h"
 #include "controladores/gestionEstaciones.h"
+#include "controladores/simulacionVenta.h"
 
 void inicio();
 
@@ -16,29 +17,7 @@ int main(int argc, char *argv[])
 
     QCoreApplication app(argc, argv);
 
-
-    // bdObject.~conexion(); // cerrra conexio
-
-
-    // QSqlQuery query(db); // crear un objeto query
-    // query.prepare("SELECT * FROM tbl_red"); // prepara la consulta
-    // query.exec(); // ejecutar la consulta
-
-    // while (query.next()){
-    //     cout << query.value(0).toInt() << endl;
-    // }
-
-
-    // // Insertar un empleado en la base de datos
-    // // query.prepare("INSERT INTO empleados (nombre, salario) VALUES (:nombre, :salario)");
-    // // query.bindValue(":nombre", "Carlos González");
-    // // query.bindValue(":salario", 5000.50);
-
-
-
     inicio();
-
-
 
     return 0;
 }
@@ -47,14 +26,15 @@ int main(int argc, char *argv[])
 void inicio(){
     //Inicio
 
-    cout << "-----------------------------" << endl;
-    cout << "|          TERMAX           |" << endl;
-    cout << "-----------------------------" << endl;
+    cout << "-----------------------------------" << endl;
+    cout << "|               TERMAX             |" << endl;
+    cout << "-----------------------------------" << endl;
     cout << "Inicio" << endl;
     cout << "------" << endl;
     cout << "Opciones disponibles. " << endl;
     cout << "1. Gestion de red." << endl;
     cout << "2. Gestion de estaciones de servicio." << endl;
+    cout << "3. Simular venta" << endl;
 
 
     short opcion;
@@ -64,7 +44,7 @@ void inicio(){
 
         if (!validarCin()) continue;
         if (!validarPositivo(opcion)) continue;
-        if (!validarRango(1, 2, opcion)) continue;
+        if (!validarRango(1, 3, opcion)) continue;
 
         break;
     }
@@ -76,9 +56,13 @@ void inicio(){
     case 2:
         gestionEstaciones();
         break;
+    case 3:
+        simulacionVenta();
+        break;
     default:
         break;
     }
 
-
+    inicio();
+    return;
 }

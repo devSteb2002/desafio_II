@@ -9,6 +9,7 @@ public:
     Categoria(QSqlDatabase& db_);
 
     unsigned short obtenerCantidadDeCategorias();
+    void obtenerCategorias(string *&nombres, unsigned short *&ids, unsigned short &tamaño);
 
     void setIdCategoria(unsigned int idCategoria);
     void setNombre(string nombre);

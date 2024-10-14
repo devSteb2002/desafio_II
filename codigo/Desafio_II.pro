@@ -9,6 +9,7 @@ CONFIG += c++17 cmdline
 
 SOURCES += \
         clases/categoria.cpp \
+        clases/cliente.cpp \
         clases/combustible.cpp \
         clases/estacion.cpp \
         clases/red.cpp \
@@ -30,6 +31,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     clases/categoria.h \
+    clases/cliente.h \
     clases/combustible.h \
     clases/estacion.h \
     clases/red.h \

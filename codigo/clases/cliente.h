@@ -16,9 +16,13 @@ public:
 
     void setIdCliente(unsigned int idCliente);
     void setCedula(unsigned int cedula);
+    void setNombre(string nombre);
+    void setApellido(string apellido);
 
     unsigned int getIdCliente() const;
     unsigned int getCedula() const;
+    string getNombre() const;
+    string getApellido() const;
 
     ~Cliente();
 };

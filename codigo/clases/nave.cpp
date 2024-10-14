@@ -3,7 +3,7 @@
 Nave::Nave(QSqlDatabase& db_) : db(db_) {}
 
 
-void Nave::crearNaves(unsigned int idEstacion, unsigned short numeroNaves){
+void Nave::crearNaves(unsigned int idEstacion, unsigned short numeroNaves){ // crear naves segun la estacion
 
     QSqlQuery query(db);
 
@@ -19,6 +19,21 @@ void Nave::crearNaves(unsigned int idEstacion, unsigned short numeroNaves){
     }
 }
 
+
+bool Nave::eliminarNaves(unsigned int idEstacion){ // eliminar naves segun estacion
+
+    QSqlQuery query(db);
+
+    query.prepare("DELETE FROM tbl_nave WHERE id_estacion = ?");
+    query.bindValue(0, idEstacion);
+
+    if (!query.exec()){
+        cout << "No se pudo eliminar las naves" << endl;
+        return false;
+    }
+
+    return true;
+}
 
 void Nave::setIdNave(unsigned short idNave){
     this->idNave = idNave;

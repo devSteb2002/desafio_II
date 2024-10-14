@@ -1,5 +1,6 @@
 #include "surtidor.h"
 #include <iomanip>
+#include <cstdlib>
 
 Surtidor::Surtidor(QSqlDatabase& db_, class estacion& estacion_): db(db_), estacion(estacion_) {}
 
@@ -140,6 +141,15 @@ bool Surtidor::eliminarSurtidores(Venta &venta){ //eliminar surtidor inactivos
                     while(query.next()){
                         unsigned int id = query.value(0).toUInt();
                         idsSurtidor[iterador] = id;
+
+                        //elimiar relacion nave surtidores
+                        query.prepare("DELETE FROM tbl_nave_surtidor WHERE id_surtidor = ?");
+                        query.bindValue(0, id);
+
+                        if (!query.exec()){
+                            cout << "Error al eliminar relacion nave surtidor" << endl;
+                        }
+
                         iterador++;
                     }
 
@@ -177,7 +187,63 @@ bool Surtidor::eliminarSurtidores(Venta &venta){ //eliminar surtidor inactivos
     return false;
 }
 
+void Surtidor::obnterSurtidorAleatorio(){
 
+    srand(static_cast<unsigned int>(time(0)));
+
+    QSqlQuery query(db);
+
+    query.prepare("SELECT COUNT(id_surtidor) FROM tbl_surtidor WHERE id_estacion = ? and activo = ?");
+    query.bindValue(0, estacion.getId());
+    query.bindValue(1, 1);
+
+    if (query.exec() && query.next()){
+        unsigned short candidadSurtidores = query.value(0).toUInt();
+
+        if (candidadSurtidores > 0){
+            unsigned short randomNumero = (rand() % candidadSurtidores) + 1; //numero aleatorio
+
+            query.prepare("SELECT id_surtidor, modelo FROM tbl_surtidor WHERE id_estacion = ? and activo = ?");
+            query.bindValue(0, estacion.getId());
+            query.bindValue(1, 1);
+
+            if (query.exec()){
+
+                if (candidadSurtidores == 1){
+                    if (query.next()){
+                        unsigned int id = query.value(0).toUInt();
+                        string modelo = query.value(1).toString().toStdString();
+
+                        setId(id);
+                        setModelo(modelo);
+
+                    }
+                }else{
+                    unsigned short iterador = 1;
+                    while (query.next()){
+
+                        if (iterador == randomNumero){
+
+                            unsigned int id = query.value(0).toUInt();
+                            string modelo = query.value(1).toString().toStdString();
+
+                            setId(id);
+                            setModelo(modelo);
+
+                            break;
+                        }
+
+
+                        iterador++;
+                    }
+                }
+            }else{
+                setId(0);
+                setModelo("");
+            }
+        }
+    }
+}
 
 bool Surtidor::eliminarSurtidor() { // eliminar un surtidor en especifico
     QSqlQuery query(db);

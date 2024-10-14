@@ -9,6 +9,7 @@ public:
     Nave(QSqlDatabase& db_);
 
     void crearNaves(unsigned int idEstacion, unsigned short numeroNaves);
+    bool eliminarNaves(unsigned int idEstacion);
 
     void setIdNave(unsigned short idNave);
     unsigned short getIdNave() const;

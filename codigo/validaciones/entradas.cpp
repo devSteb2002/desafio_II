@@ -1,5 +1,6 @@
 #include "entradas.h"
 #include <limits>
+#include <regex>
 
 bool validarCin(){ // validar entrada de datos
     if (cin.fail()){
@@ -55,5 +56,27 @@ bool validarVarchar(unsigned short longitud, string text){ // sanetizar y valida
     return true;
 }
 
+bool validarCedula(unsigned int cedula){
 
+    size_t digitos = to_string(cedula).length();
+
+    if (digitos < 8 || digitos > 10){
+        cout << "La cedula debe contener de 8 a 10 numeros." << endl;
+        return false;
+    }
+
+    return true;
+}
+
+bool validarNombreYApellido(string nombre){
+
+    regex regexNombre("^[A-Za-zÀ-ÖØ-öø-ÿ'\\s-]+$");
+
+    if (!regex_match(nombre, regexNombre)){
+        cout << "El nombre o apellido no es valido" << endl;
+        return false;
+    }
+
+    return true;
+}
 

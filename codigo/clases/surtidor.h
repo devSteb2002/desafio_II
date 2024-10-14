@@ -18,6 +18,7 @@ public:
     unsigned int agregarSurtidor();
     bool eliminarSurtidores(Venta &venta);
     bool verificarExistencia();
+    void obnterSurtidorAleatorio();
   
     bool eliminarSurtidor();
     void desactivarSurtidor();

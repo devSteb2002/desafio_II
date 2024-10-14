@@ -15,6 +15,8 @@ public:
 
     void crearTanque();
     bool eliminarTanque();
+    float obtenerCapacidadCategoria(unsigned short idCategoria);
+    bool actualizarCapacidadCategoria(float litros, unsigned short idCategoria);
 
     void setIdTanque(unsigned int idTanque);
     void setCapacidadTanque(float capacidadTanque);

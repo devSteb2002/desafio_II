@@ -2,11 +2,13 @@
 #include "clases/surtidor.h"
 #include "validaciones/entradas.h"
 #include "clases/estacion.h"
+#include "clases/venta.h"
 void agregarSurtidor(QSqlDatabase& db);
 void eliminarSurtidor(QSqlDatabase& db);
 void desactivarSurtidor(QSqlDatabase& db);
 void activarSurtidor(QSqlDatabase& db);
 void historicoTransacciones(QSqlDatabase& db);
+void litrosVendidosPorCategoria(QSqlDatabase& db);
 void menuEstaciones(QSqlDatabase& db);
 
 void gestionEstaciones() {
@@ -27,6 +29,7 @@ void menuEstaciones(QSqlDatabase &db) {
     cout << "3. Desactivar surtidor." << endl;
     cout << "4. Activar surtidor." << endl;
     cout << "5. Historico de transacciones." << endl;
+    cout << "6. Ver litros de combustible vendido por categorias." << endl;
 
     short opcion;
 
@@ -36,7 +39,7 @@ void menuEstaciones(QSqlDatabase &db) {
 
         if (!validarCin()) continue;
         if (!validarPositivo(opcion)) continue;
-        if (!validarRango(1, 5, opcion)) continue;
+        if (!validarRango(1, 6, opcion)) continue;
 
         break;
     }
@@ -56,6 +59,9 @@ void menuEstaciones(QSqlDatabase &db) {
         break;
     case 5:
         historicoTransacciones(db);
+        break;
+    case 6:
+        litrosVendidosPorCategoria(db);
         break;
     default:
         break;
@@ -461,9 +467,21 @@ void historicoTransacciones(QSqlDatabase &db) {
         return;
     }
 
+    cout << endl;
+
     surtidor.historicoTransacciones();
     menuEstaciones(db);
 
     delete[] estacionesDisponibles;
     delete[] surtidoresDisponibles;
+}
+
+void litrosVendidosPorCategoria(QSqlDatabase &db) {
+
+    estacion est(db);
+
+    Surtidor s(db, est);
+    Venta v(s, db);
+
+    v.litrosDeCombustibleVendidosPorCategoria();
 }

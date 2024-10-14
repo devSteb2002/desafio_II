@@ -95,6 +95,35 @@ void Venta::calcularVentasPorES(unsigned int idRed, Categoria& categoria){ // Ca
 
 }
 
+void Venta::litrosDeCombustibleVendidosPorCategoria() {
+
+    QSqlQuery query(db);
+
+    query.prepare(
+        "SELECT c.nombre, SUM(v.cantidad_combustible) as total_litros "
+        "FROM tbl_venta v "
+        "JOIN tbl_categoria c ON v.id_categoria = c.id_categoria "
+        "GROUP BY c.nombre"
+        );
+
+    if (query.exec()) {
+        cout << "---------------------------------" << endl;
+        cout << "| Litros vendidos por categoria |" << endl;
+        cout << "---------------------------------" << endl;
+        while (query.next()) {
+            string categoria = query.value(0).toString().toStdString();
+            double litrosVendidos = query.value(1).toDouble();
+
+            cout << "Categoria: " << categoria << endl;
+            cout << "Litros vendidos: " << litrosVendidos << " L" << endl;
+            cout << "-----------------------------------" << endl;
+        }
+    } else {
+        cout << "Error al consultar litros vendidos." << endl;
+    }
+
+}
+
 
 //Setter
 void Venta::setIdVenta(unsigned int idVenta){

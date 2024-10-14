@@ -18,6 +18,7 @@ public:
     void setMetodoPago(string metodoPago);
     void setCantidadCombustible(float cantidadCombustible);
     void setCantidadDinero(float cantidadDinero);
+    void litrosDeCombustibleVendidosPorCategoria();
 
 
     unsigned int getIdVenta() const;

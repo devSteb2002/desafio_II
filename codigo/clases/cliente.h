@@ -9,6 +9,7 @@ class Cliente
 private:
     unsigned int idCliente;
     unsigned int cedula;
+    QSqlDatabase& db;
 
 public:
     Cliente(QSqlDatabase& db_);

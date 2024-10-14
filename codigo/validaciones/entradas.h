@@ -9,6 +9,9 @@ bool validarCin();
 bool validarRango(unsigned short rango1, unsigned short rango2, unsigned short numero);
 bool validarPositivo(short numero);
 bool validarVarchar(unsigned short longitud, string text);
+bool validarCedula(unsigned int cedula);
+bool validarNombreYApellido(string nombre);
+
 
 template <typename T>
 bool validarNumeroEnArreglo(T *&array, T tamañaArray ,T numero){

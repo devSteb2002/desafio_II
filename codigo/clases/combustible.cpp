@@ -42,6 +42,26 @@ void Combustible::guardarCombustible(unsigned short idRegion, unsigned short idC
     }
 }
 
+void Combustible::obtenerValorLitro(unsigned int idEstacion, unsigned short idCategoria){
+
+    QSqlQuery query(db);
+
+    query.prepare("SELECT com.valor_litro FROM tbl_estacion AS est "
+                  "INNER JOIN tbl_combustible AS com ON "
+                  "est.id_region = com.id_region "
+                  "WHERE est.id_estacion = ? and com.id_categoria = ?");
+
+    query.bindValue(0, idEstacion);
+    query.bindValue(1, idCategoria);
+
+    if (query.exec() && query.next()){
+        setValorLitro(query.value(0).toFloat());
+    }else{
+        cout << "Erro al consultar el valor litro" << endl;
+        setValorLitro(0.0);
+    }
+}
+
 void Combustible::setIdCombustible(unsigned short idCombustible){
     this->idCombustible = idCombustible;
 }

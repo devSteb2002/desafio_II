@@ -9,6 +9,7 @@ class Venta
 public:
     Venta(class Surtidor &surtidor_ , QSqlDatabase& db_);
 
+    bool añadirVenta(unsigned short idCategoria, unsigned int idCliente,  unsigned int idSurtidor);
     bool eliminarVentas(unsigned int *&ids, unsigned int tamaño);
     void calcularVentasPorES(unsigned int idRed, Categoria& categoria);
 
@@ -18,6 +19,7 @@ public:
     void setMetodoPago(string metodoPago);
     void setCantidadCombustible(float cantidadCombustible);
     void setCantidadDinero(float cantidadDinero);
+    void setTotalVenta(float totalVenta);
 
 
     unsigned int getIdVenta() const;
@@ -26,6 +28,7 @@ public:
     string getMetodoPago() const;
     float getCantidadCombustible() const;
     float getCantidadDinero() const;
+    float getTotalVenta() const;
 
 
     ~Venta();
@@ -36,6 +39,7 @@ private:
     string metodoPago;
     float cantidadCombustible;
     float cantidadDinero;
+    float totalVenta;
     Surtidor& surtidor;
     QSqlDatabase& db;
 

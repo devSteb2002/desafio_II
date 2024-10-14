@@ -9,6 +9,7 @@ public:
     Combustible(QSqlDatabase& db_);
 
     void guardarCombustible(unsigned short idRegion, unsigned short idCategoria);
+    void obtenerValorLitro(unsigned int idEstacion, unsigned short idCategoria);
 
     void setIdCombustible(unsigned short idCombustible);
     void setValorLitro(float valorLitro);

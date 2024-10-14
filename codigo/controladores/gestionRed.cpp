@@ -4,6 +4,7 @@
 #include "clases/red.h"
 #include "clases/estacion.h"
 #include "clases/tanque.h"
+#include "clases/nave.h"
 #include "clases/region.h"
 #include "clases/venta.h"
 #include "clases/categoria.h"
@@ -77,8 +78,8 @@ void agregarEstacionDeServicio(QSqlDatabase& db){ //agregar estaciones de servic
 
     string nombre;
     float longitud, latitud;
-    unsigned short region;
-    bool prin = true, validoNombre = false, validaRegion = false, validaLatitud = false;
+    unsigned short region, naves;
+    bool prin = true, validoNombre = false, validaRegion = false, validaLatitud = false, validarLongitud = false;
 
 
     unsigned short *ids = nullptr;
@@ -121,35 +122,46 @@ void agregarEstacionDeServicio(QSqlDatabase& db){ //agregar estaciones de servic
 
             validaLatitud = true;
 
-        }else{ //validar longitud
+        }else if (!validarLongitud){ //validar longitud
             cout << "Ingrese la longitud: ";
             cin >> longitud;
 
             if (!validarCin()) continue;
 
-            break;
+            validarLongitud = true;
+        }else{
+            //validar namves de 1 a 4
+            cout << "Ingrese el numero de naves de esta estacion." << endl;
+            cin >> naves;
 
+            if (!validarCin()) continue;
+            if (!validarRango(1, 4, naves)) continue;
+
+            break;
         }
     }
+
 
     delete[] ids;
     delete[] nombres;
 
     estacion est(db);
+    Tanque tanq_(&est, &db);
+    Nave nave(db);
 
     est.setNombre(nombre);
     est.setLatitud(latitud);
     est.setLongitud(longitud);
 
-    unsigned int idCreado = est.crearEstacion(region);
-    est.setId(idCreado);
-
     try {
+
+        unsigned int idCreado = est.crearEstacion(region);
+        est.setId(idCreado);
+
         if (est.getId() != 0){
 
-            Tanque tanq_(&est, &db);
+            nave.crearNaves(idCreado, naves); // crear naves segun la estacion
             tanq_.crearTanque();
-            //tanq_.~Tanque();
 
             cout << "Estacion creada con exito." << endl;
 

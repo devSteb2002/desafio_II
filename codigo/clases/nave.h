@@ -10,6 +10,7 @@ public:
 
     void crearNaves(unsigned int idEstacion, unsigned short numeroNaves);
     void obtenerNaves(unsigned int idEstacion);
+    bool eliminarNaves(unsigned int idEstacion);
 
     void setIdNave(unsigned short idNave);
     unsigned short getIdNave() const;

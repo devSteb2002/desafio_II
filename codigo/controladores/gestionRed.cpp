@@ -240,13 +240,12 @@ void eliminarEstacionDeServicio(QSqlDatabase& db){ // eliminar una estacion de s
     if (eliminar){
         //eliminar tanque y estacion
         Tanque tanq(&est_, &db);
+        Nave nave(db);
 
-        if (tanq.eliminarTanque()){ // eliminar tanque
-            if (est_.eliminarEstacion()){
+        if (tanq.eliminarTanque() && est_.eliminarEstacion() && nave.eliminarNaves(est_.getId())){
                 cout << "La estacion " << est_.getId() << " fue eliminada con exito" << endl;
-            }else{
-                cout << "La estacion " << est_.getId() << " no se pudo eliminar " << endl;
-            }
+        }else{
+            cout << "Error en la eliminacion de la estacion" << endl;
         }
     }
 
@@ -277,6 +276,8 @@ void calcularMontoDeVentasPorES(QSqlDatabase& db){ // calcular el monto de venta
         return;
 
     }else{
+
+        if (idsEstaciones != nullptr) delete[] idsEstaciones;
 
         Categoria categoria(db);
         vent.calcularVentasPorES(idRed, categoria);

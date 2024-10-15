@@ -5,6 +5,30 @@ Venta::Venta(class Surtidor &surtidor_ , QSqlDatabase& db_): surtidor(surtidor_)
 
 }
 
+
+bool Venta::añadirVenta(unsigned short idCategoria, unsigned int idCliente, unsigned int idSurtidor){
+
+    QSqlQuery query(db);
+
+    query.prepare("INSERT INTO tbl_venta "
+    " (fecha, hora, metodo_pago, cantidad_combustible, cantidad_dinero, total_venta, id_categoria, id_cliente, id_surtidor) "
+    " VALUES(?,?,?,?,?,?,?,?,?)");
+
+    query.bindValue(0, QString::fromStdString(getFecha()));
+    query.bindValue(1, QString::fromStdString(getHora()));
+    query.bindValue(2, QString::fromStdString(getMetodoPago()));
+    query.bindValue(3, getCantidadCombustible());
+    query.bindValue(4, getCantidadDinero());
+    query.bindValue(5, getTotalVenta());
+    query.bindValue(6, idCategoria);
+    query.bindValue(7, idCliente);
+    query.bindValue(8, idSurtidor);
+
+    if (query.exec()){
+        return true;
+    }else return false;
+}
+
 bool Venta::eliminarVentas(unsigned int *&ids, unsigned int tamaño){ //eliminar todas las ventas
     QSqlQuery query_(db);
 
@@ -40,7 +64,7 @@ void Venta::calcularVentasPorES(unsigned int idRed, Categoria& categoria){ // Ca
     if (tamaño > 0){
 
         QSqlQuery query(db);
-        query.prepare("SELECT  est.id_estacion, est.nombre, cat.nombre, SUM(vent.cantidad_dinero) FROM tbl_venta AS vent "
+        query.prepare("SELECT  est.id_estacion, est.nombre, cat.nombre, SUM(vent.total_venta) FROM tbl_venta AS vent "
          "INNER JOIN tbl_surtidor AS sur ON sur.id_surtidor = vent.id_surtidor "
          "INNER JOIN tbl_estacion AS est ON est.id_estacion = sur.id_estacion "
          "INNER JOIN tbl_categoria AS cat ON vent.id_categoria = cat.id_categoria "
@@ -149,6 +173,10 @@ void Venta::setCantidadDinero(float cantidadDinero){
     this->cantidadDinero = cantidadDinero;
 }
 
+void Venta::setTotalVenta(float totalVenta){
+    this->totalVenta = totalVenta;
+}
+
 //Getter
 unsigned int Venta::getIdVenta() const{
     return this->idVenta;
@@ -172,6 +200,10 @@ float Venta::getCantidadCombustible() const{
 
 float Venta::getCantidadDinero() const{
     return this->cantidadDinero;
+}
+
+float Venta::getTotalVenta() const{
+    return this->totalVenta;
 }
 
 

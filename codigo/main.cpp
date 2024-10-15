@@ -3,6 +3,7 @@
 #include "controladores/gestionRed.h"
 #include "controladores/gestionEstaciones.h"
 #include "controladores/simulacionVenta.h"
+#include "controladores/verificacionFugas.h"
 
 void inicio();
 
@@ -34,7 +35,8 @@ void inicio(){
     cout << "Opciones disponibles. " << endl;
     cout << "1. Gestion de red." << endl;
     cout << "2. Gestion de estaciones de servicio." << endl;
-    cout << "3. Simular venta" << endl;
+    cout << "3. Simular venta." << endl;
+    cout << "4. Verificacion de fugas." << endl;
 
 
     short opcion;
@@ -44,7 +46,7 @@ void inicio(){
 
         if (!validarCin()) continue;
         if (!validarPositivo(opcion)) continue;
-        if (!validarRango(1, 3, opcion)) continue;
+        if (!validarRango(1, 4, opcion)) continue;
 
         break;
     }
@@ -58,6 +60,9 @@ void inicio(){
         break;
     case 3:
         simulacionVenta();
+        break;
+    case 4:
+        verificacionFugas();
         break;
     default:
         break;

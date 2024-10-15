@@ -3,12 +3,15 @@
 #include "validaciones/entradas.h"
 #include "clases/estacion.h"
 #include "clases/venta.h"
+#include "clases/nave.h"
+#include "clases/tanque.h"
 void agregarSurtidor(QSqlDatabase& db);
 void eliminarSurtidor(QSqlDatabase& db);
 void desactivarSurtidor(QSqlDatabase& db);
 void activarSurtidor(QSqlDatabase& db);
 void historicoTransacciones(QSqlDatabase& db);
 void litrosVendidosPorCategoria(QSqlDatabase& db);
+void asignarCapacidadAleatoriaDelTanque(QSqlDatabase& db);
 void menuEstaciones(QSqlDatabase& db);
 
 void gestionEstaciones() {
@@ -30,6 +33,7 @@ void menuEstaciones(QSqlDatabase &db) {
     cout << "4. Activar surtidor." << endl;
     cout << "5. Historico de transacciones." << endl;
     cout << "6. Ver litros de combustible vendido por categorias." << endl;
+    cout << "7. Asignar aleatoriamente la capacidad del tanque de suministro." << endl;
 
     short opcion;
 
@@ -39,7 +43,7 @@ void menuEstaciones(QSqlDatabase &db) {
 
         if (!validarCin()) continue;
         if (!validarPositivo(opcion)) continue;
-        if (!validarRango(1, 6, opcion)) continue;
+        if (!validarRango(1, 7, opcion)) continue;
 
         break;
     }
@@ -63,6 +67,9 @@ void menuEstaciones(QSqlDatabase &db) {
     case 6:
         litrosVendidosPorCategoria(db);
         break;
+    case 7:
+        asignarCapacidadAleatoriaDelTanque(db);
+        break;
     default:
         break;
     }
@@ -72,6 +79,7 @@ void menuEstaciones(QSqlDatabase &db) {
 void agregarSurtidor(QSqlDatabase &db) {
 
     estacion estacionActual(db);
+
     unsigned int tamEstaciones;
 
     unsigned int* estacionesDisponibles = estacionActual.obtenerEstaciones(tamEstaciones);
@@ -484,4 +492,55 @@ void litrosVendidosPorCategoria(QSqlDatabase &db) {
     Venta v(s, db);
 
     v.litrosDeCombustibleVendidosPorCategoria();
+}
+
+void asignarCapacidadAleatoriaDelTanque(QSqlDatabase &db) {
+    estacion estacionActual(db);
+
+    unsigned int tamEstaciones;
+    unsigned int* estacionesDisponibles = estacionActual.obtenerEstaciones(tamEstaciones);
+
+    if (tamEstaciones == 0) {
+        cout << "No hay estaciones disponibles." << endl;
+        menuEstaciones(db);
+        return;
+    }
+
+    unsigned int idEstacion;
+    while(true) {
+        cout << "Ingrese el ID de la estacion de la cual deseas asignar la capacidad del tanque: ";
+        cin >> idEstacion;
+
+        if (!validarCin()) continue;
+        break;
+    }
+
+    bool estacionEncontrada = false;
+    for (unsigned int i = 0; i < tamEstaciones; i++) {
+        if (estacionesDisponibles[i] == idEstacion) {
+            estacionEncontrada = true;
+            estacionActual.setId(idEstacion);
+            break;
+        }
+    }
+
+    if (!estacionEncontrada) {
+        cout << "Estacion no encontrado." << endl;
+        delete[] estacionesDisponibles;
+        menuEstaciones(db);
+        return;
+    }
+
+    Tanque tanque(&estacionActual, &db);
+
+    cout << endl;
+
+    tanque.asignarCapacidadAleatoriaDelTanque();
+
+    cout << endl;
+
+    menuEstaciones(db);
+
+    delete[] estacionesDisponibles;
+
 }

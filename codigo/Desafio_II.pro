@@ -22,6 +22,7 @@ SOURCES += \
         controladores/gestionEstaciones.cpp \
         controladores/gestionRed.cpp \
         controladores/simulacionVenta.cpp \
+        controladores/verificacionFugas.cpp \
         main.cpp \
         validaciones/entradas.cpp
 
@@ -45,4 +46,5 @@ HEADERS += \
     controladores/gestionEstaciones.h \
     controladores/gestionRed.h \
     controladores/simulacionVenta.h \
+    controladores/verificacionFugas.h \
     validaciones/entradas.h

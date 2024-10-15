@@ -83,6 +83,42 @@ unsigned int Surtidor::agregarSurtidor() {
 
     QSqlQuery query(db);
 
+    int cantidadDeSurtidores = obtenerCantidadActivos();
+
+    if (cantidadDeSurtidores >= 12) {
+        cout << "No se puede agregar mas surtidores. Se ha alcanzado el limite maximo de 12." << endl;
+        return 0;
+    }
+
+    query.prepare("SELECT id_nave FROM tbl_nave WHERE id_estacion = ?");
+    query.bindValue(0, estacion.getId());
+
+    if (!query.exec()) {
+        cout << "Error al obtener las naves de la estación." << endl;
+        return 0;
+    }
+
+    int cantidadNaves = 0;
+    while(query.next()) {
+        cantidadNaves++;
+    }
+
+    if (cantidadNaves == 0) {
+        cout << "No hay naves disponibles en la estacion." << endl;
+        return 0;
+    }
+
+    unsigned int* naves = new unsigned int[cantidadNaves];
+    query.exec();
+
+    int index = 0;
+    while (query.next()) {
+        naves[index++] = query.value(0).toUInt();
+    }
+
+    // Seleccionar una nave aleatoria
+    unsigned int idNaveAleatoria = naves[rand() % cantidadNaves];
+
     query.prepare("INSERT INTO tbl_surtidor (modelo, activo, id_estacion) VALUES (?, ?, ?)");
     query.bindValue(0, QString::fromStdString(getModelo()));
     query.bindValue(1, getActivo());
@@ -93,7 +129,21 @@ unsigned int Surtidor::agregarSurtidor() {
         return 0;
     }
 
+
+
     unsigned int idSurtidor = query.lastInsertId().toUInt();
+
+    query.prepare("INSERT INTO tbl_nave_surtidor (id_surtidor, id_nave) VALUES (?, ?)");
+    query.bindValue(0, idSurtidor);
+    query.bindValue(1, idNaveAleatoria);
+
+    if (!query.exec()) {
+        cout << "Error al agregar el surtidor a la nave." << endl;
+        return 0;
+    }
+
+    delete[] naves;
+
     return idSurtidor;
 }
 

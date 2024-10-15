@@ -15,6 +15,8 @@ public:
 
     void crearTanque();
     bool eliminarTanque();
+    void verificarFugas();
+    void asignarCapacidadAleatoriaDelTanque();
 
     void setIdTanque(unsigned int idTanque);
     void setCapacidadTanque(float capacidadTanque);

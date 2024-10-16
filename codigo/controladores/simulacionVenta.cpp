@@ -59,11 +59,14 @@ void menuSimluacion(QSqlDatabase& db){
         estacion.setId(id);
         surtidor.obnterSurtidorAleatorio();
 
+        delete[] idsEstaciones;
+
         if (surtidor.getId() == 0){
-            cout << "Esta estacion aun no cuenta con surtidores." << endl;
+            cout << endl;
+            cout << "| Esta estacion aun no cuenta con surtidores. |" << endl;
+            cout << endl;
             return;
         }
-
 
         //obtener cadegoria aletaoria
         string *nombres = nullptr;
@@ -77,10 +80,10 @@ void menuSimluacion(QSqlDatabase& db){
             return;
         }
 
-        unsigned const short randomCategoiras = (rand() % tamaño) + 1;
+        const unsigned short randomCategoiras = (rand() % tamaño) + 1;
+        const string categoriaSeleccionada = nombres[randomCategoiras - 1];
+        const unsigned short idCategoriaSeleccionada = ids[randomCategoiras - 1];
         float randomlitros = (rand() % 20) + 3;
-        string const categoriaSeleccionada = nombres[randomCategoiras - 1];
-        unsigned const short idCategoriaSeleccionada = ids[randomCategoiras - 1];
 
         delete[] nombres;
         delete[] ids;
@@ -92,7 +95,9 @@ void menuSimluacion(QSqlDatabase& db){
 
         //verificacion de capacidad en el tanque
         if (capacidadCategoriaEnTanque == 0.0){
-            cout << "La categoria " << categoriaSeleccionada << " esta agotada" << endl;
+            cout << endl;
+            cout << "| La categoria " << categoriaSeleccionada << " esta agotada. |" << endl;
+            cout << endl;
             return;
         }
 
@@ -102,7 +107,7 @@ void menuSimluacion(QSqlDatabase& db){
 
         cout << "Surtidor:  " << surtidor.getModelo() << endl;
         cout << "Pedido: " << randomlitros << "L de " << categoriaSeleccionada << endl;
-        cout << "Valor total: " << costoGasolina << endl;
+        cout << "Valor total: $" << costoGasolina << endl;
 
         cout << "| Datos del cliente |" << endl;
 
@@ -130,10 +135,14 @@ void menuSimluacion(QSqlDatabase& db){
                 if (!validarCedula(cedula)) continue;
 
                 cliente.setCedula(cedula);
-                if (cliente.verificarExistencia()){
+                if (cliente.verificarExistencia()){ // el usuario ya esta registrado
                     yaExiste = true;
                     validoNombre = true;
                     validoApellido = true;
+
+                    cout << "---------------" << endl;
+                    cout << "Bienvenido de nuevo senor(a):" << cliente.getNombre() << endl;
+
                 }
 
                 validoCedula = true;
@@ -151,8 +160,6 @@ void menuSimluacion(QSqlDatabase& db){
                     validoNombre = true;
                     init = true;
                 }else if (!validoApellido){
-                    // if (init) cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    // init = false;
 
                     cout << "Ingrese su apellido: ";
                     getline(cin, apellido);
@@ -196,10 +203,7 @@ void menuSimluacion(QSqlDatabase& db){
         }
 
 
-        if (yaExiste){
-            cout << "---------------" << endl;
-            cout << "Bienvenido de nuevo senor(a) :" << cliente.getNombre() << endl;
-        }else{
+        if (!yaExiste){ // sino exste el usuario se crea
             cliente.setCedula(cedula);
             cliente.setNombre(nombre);
             cliente.setApellido(apellido);
@@ -233,14 +237,17 @@ void menuSimluacion(QSqlDatabase& db){
              cout << "-------------------" << endl;
              cout << "Fecha/Hora : " << venta.getFecha() << " " << venta.getHora() << endl;
              cout << "Cantidad gasolina: " << venta.getCantidadCombustible() << " L" << endl;
+             cout << "Tipo gasolina: " << categoriaSeleccionada << endl;
              cout << "Metodo de pago: " << venta.getMetodoPago() <<  endl;
-             cout << "Valor total: " << venta.getTotalVenta() << endl;
+             cout << "Dinero recibido: $" << dinero << endl;
+             cout << "Dinero devuelto: $" << (dinero - costoGasolina) << endl;
+             cout << "Valor total: $" << venta.getTotalVenta() << endl;
              cout << "-------------------" << endl;
              cout << "Datos del usuario" << endl;
              cout << "-------------------" << endl;
-             cout << "cedula: " << cliente.getCedula() << endl;
+             cout << "Cedula: " << cliente.getCedula() << endl;
              cout << "Nombre: " << cliente.getNombre() << endl;
-             cout << "Apellido: " << cliente.getApellido() << endl;
+             cout << "Apellido(s): " << cliente.getApellido() << endl;
              cout << "-------------------" << endl;
              cout << endl;
          }

@@ -203,9 +203,14 @@ float Tanque::obtenerCapacidadCategoria(unsigned short idCategoria){
     query.bindValue(0, estacion->getId());
     query.bindValue(1, idCategoria);
 
-    if (query.exec() && query.next()){
-        setIdTanque(query.value(1).toUInt());
-        return query.value(0).toFloat();
+    if (query.exec()){
+        if (query.next()){
+            setIdTanque(query.value(1).toUInt());
+            return query.value(0).toFloat();
+        }else{
+            setIdTanque(0);
+            return 0.0;
+        }
     }else{
         setIdTanque(0);
         cout << "Error al consultar la capacidad de la categoria" << endl;

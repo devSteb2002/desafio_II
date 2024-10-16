@@ -24,7 +24,7 @@ void gestionRed(){ //inicio del controlador
 
     menu(db);
 
-    bdObject.~conexion();
+   // bdObject.~conexion();
 }
 
 
@@ -37,6 +37,7 @@ void menu(QSqlDatabase& db){
     cout << "2. Eliminar una estacion de servicio." << endl;
     cout << "3. Calcular el monto total de ventas en cada E/S del pais." << endl;
     cout << "4. Fijar los precios del combustible." << endl;
+    cout << "5. salir" << endl;
 
     short opcion;
 
@@ -64,12 +65,12 @@ void menu(QSqlDatabase& db){
     case 4:
         fijarPreciosCombustibles(db);
         break;
+    case 5:
+        return;
+        break;
     default:
         break;
     }
-
-
-
 }
 
 void agregarEstacionDeServicio(QSqlDatabase& db){ //agregar estaciones de servicio
@@ -80,7 +81,6 @@ void agregarEstacionDeServicio(QSqlDatabase& db){ //agregar estaciones de servic
     float longitud, latitud;
     unsigned short region, naves;
     bool prin = true, validoNombre = false, validaRegion = false, validaLatitud = false, validarLongitud = false;
-
 
     unsigned short *ids = nullptr;
     string *nombres = nullptr;
@@ -205,7 +205,6 @@ void eliminarEstacionDeServicio(QSqlDatabase& db){ // eliminar una estacion de s
         menu(db);
         return;
     }
-
 
 
     delete[] ids;

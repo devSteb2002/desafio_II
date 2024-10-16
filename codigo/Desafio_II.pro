@@ -12,6 +12,7 @@ SOURCES += \
         clases/cliente.cpp \
         clases/combustible.cpp \
         clases/estacion.cpp \
+        clases/gerente.cpp \
         clases/nave.cpp \
         clases/red.cpp \
         clases/region.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     clases/cliente.h \
     clases/combustible.h \
     clases/estacion.h \
+    clases/gerente.h \
     clases/nave.h \
     clases/red.h \
     clases/region.h \

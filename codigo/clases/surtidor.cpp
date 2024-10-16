@@ -291,6 +291,9 @@ void Surtidor::obnterSurtidorAleatorio(){
                 setId(0);
                 setModelo("");
             }
+        }else{
+            setId(0);
+            setModelo("");
         }
     }
 }

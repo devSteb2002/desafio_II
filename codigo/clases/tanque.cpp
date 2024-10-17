@@ -138,9 +138,15 @@ void Tanque::verificarFugas() {
         return;
     }
 
+    if(!query.next()) {
+        cout << "---------------------------" << endl;
+        cout << "| El tanque no esta lleno |" << endl;
+        cout << "---------------------------" << endl;
+        return;
+    }
+
     while (query.next()) {
         unsigned int idCategoria = query.value(0).toUInt();
-        //float capacidadCategoria = query.value(1).toFloat();
         string nombreCategoria = query.value(2).toString().toStdString();
         float capacidadOriginalTanque = query.value(3).toFloat(); // Capacidad original del tanque
 

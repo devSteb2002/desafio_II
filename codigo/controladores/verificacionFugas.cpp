@@ -10,7 +10,7 @@ void verificacionFugas() {
 
     menuVerificacion(db);
 
-    bdObject.~conexion();
+    //bdObject.~conexion();
 
 }
 

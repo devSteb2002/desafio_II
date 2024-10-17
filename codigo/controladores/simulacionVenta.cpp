@@ -20,7 +20,7 @@ void simulacionVenta(){
 
     menuSimluacion(db);
 
-   // bdObject.~conexion();
+   //bdObject.~conexion();
 
 }
 
@@ -60,7 +60,6 @@ void menuSimluacion(QSqlDatabase& db){
         estacion.setId(id);
         surtidor.obnterSurtidorAleatorio();
 
-        delete[] idsEstaciones;
 
         if (surtidor.getId() == 0){
             cout << endl;

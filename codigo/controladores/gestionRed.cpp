@@ -24,7 +24,7 @@ void gestionRed(){ //inicio del controlador
 
     menu(db);
 
-   // bdObject.~conexion();
+   //bdObject.~conexion();
 }
 
 

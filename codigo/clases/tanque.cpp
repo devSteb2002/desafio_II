@@ -140,15 +140,17 @@ void Tanque::verificarFugas() {
 
     while (query.next()) {
         unsigned int idCategoria = query.value(0).toUInt();
-        float capacidadCategoria = query.value(1).toFloat();
+        //float capacidadCategoria = query.value(1).toFloat();
         string nombreCategoria = query.value(2).toString().toStdString();
+        float capacidadOriginalTanque = query.value(3).toFloat(); // Capacidad original del tanque
 
         QSqlQuery ventasQuery(*db);
         ventasQuery.prepare(
             "SELECT SUM(v.cantidad_combustible) "
             "FROM tbl_venta v "
             "JOIN tbl_surtidor s ON v.id_surtidor = s.id_surtidor "
-            "WHERE v.id_categoria = ? AND s.id_surtidor = ?"
+            "JOIN tbl_tanque t ON s.id_estacion = t.id_estacion " // Relación con tbl_tanque
+            "WHERE v.id_categoria = ? AND t.id_estacion = ?"
             );
         ventasQuery.bindValue(0, idCategoria);
         ventasQuery.bindValue(1, estacion->getId());
@@ -158,17 +160,19 @@ void Tanque::verificarFugas() {
             continue;
         }
 
-        float cantidadVendida = ventasQuery.value(0).toFloat();
+        float cantidadVendida = ventasQuery.value(0).toFloat(); // Combustible vendido
 
         // Obtener la cantidad de combustible almacenada en el tanque
         QSqlQuery almacenQuery(*db);
 
         almacenQuery.prepare(
-            "SELECT capacidad_tanque "
-            "FROM tbl_tanque "
-            "WHERE id_estacion = ?"
+            "SELECT SUM(tc.capacidad_categoria) "
+            "FROM tbl_tanque_categoria tc "
+            "JOIN tbl_tanque t ON tc.id_tanque = t.id_tanque "
+            "WHERE tc.id_categoria = ? AND t.id_estacion = ?"
             );
-        almacenQuery.bindValue(0, estacion->getId());
+        almacenQuery.bindValue(0, idCategoria);
+        almacenQuery.bindValue(1, estacion->getId());
 
         if (!almacenQuery.exec() || !almacenQuery.next()) {
             cout << "Error al obtener la cantidad almacenada para la categoría." << endl;
@@ -179,7 +183,7 @@ void Tanque::verificarFugas() {
 
         // Verificar si lo vendido más lo almacenado es menor al 95% de la capacidad original
         float totalActual = cantidadVendida + cantidadAlmacenada;
-        float capacidadMinima = capacidadCategoria * 0.95;
+        float capacidadMinima = capacidadOriginalTanque * 0.95;
 
         if (totalActual < capacidadMinima) {
             cout << "--------------------------" << endl;

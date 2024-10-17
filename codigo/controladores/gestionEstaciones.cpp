@@ -34,6 +34,7 @@ void menuEstaciones(QSqlDatabase &db) {
     cout << "5. Historico de transacciones." << endl;
     cout << "6. Ver litros de combustible vendido por categorias." << endl;
     cout << "7. Asignar aleatoriamente la capacidad del tanque de suministro." << endl;
+    cout << "8. Salir" << endl;
 
     short opcion;
 
@@ -43,7 +44,7 @@ void menuEstaciones(QSqlDatabase &db) {
 
         if (!validarCin()) continue;
         if (!validarPositivo(opcion)) continue;
-        if (!validarRango(1, 7, opcion)) continue;
+        if (!validarRango(1, 8, opcion)) continue;
 
         break;
     }
@@ -69,6 +70,9 @@ void menuEstaciones(QSqlDatabase &db) {
         break;
     case 7:
         asignarCapacidadAleatoriaDelTanque(db);
+        break;
+    case 8:
+        return;
         break;
     default:
         break;

@@ -56,6 +56,7 @@ void menuSimluacion(QSqlDatabase& db){
             break;
         }
 
+        delete[] idsEstaciones;
         estacion.setId(id);
         surtidor.obnterSurtidorAleatorio();
 

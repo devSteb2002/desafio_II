@@ -12,6 +12,7 @@ public:
     bool añadirVenta(unsigned short idCategoria, unsigned int idCliente,  unsigned int idSurtidor);
     bool eliminarVentas(unsigned int *&ids, unsigned int tamaño);
     void calcularVentasPorES(unsigned int idRed, Categoria& categoria);
+    void litrosDeCombustibleVendidosPorCategoria();
 
     void setIdVenta(unsigned int idVenta);
     void setFecha(string fecha);
@@ -19,7 +20,6 @@ public:
     void setMetodoPago(string metodoPago);
     void setCantidadCombustible(float cantidadCombustible);
     void setCantidadDinero(float cantidadDinero);
-    void litrosDeCombustibleVendidosPorCategoria();
     void setTotalVenta(float totalVenta);
 
 

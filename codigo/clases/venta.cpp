@@ -111,7 +111,7 @@ void Venta::calcularVentasPorES(unsigned int idRed, Categoria& categoria){ // Ca
 
             cout << endl;
 
-        }else cout << query.lastError().text().toStdString() << endl;
+        }else cout << query.lastError().text().toStdString()  << endl;
 
     }else{
         cout << "No se encutran categorias existentes." << endl;

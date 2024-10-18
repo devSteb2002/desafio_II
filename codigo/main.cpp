@@ -7,12 +7,6 @@
 
 void inicio();
 
-
-template <typename T> T myMax(T x, T y)
-{
-    return (x > y) ? x : y;
-}
-
 int main(int argc, char *argv[])
 {
 
